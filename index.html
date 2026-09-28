@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Управление Б — Отчётность инструкторов</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #14170f;
+    --surface: #1d2317;
+    --surface-2: #262d1c;
+    --accent: #c99a3d;
+    --accent-dim: #8a6c2c;
+    --text: #eae6d8;
+    --muted: #9aa089;
+    --border: #383f2c;
+    --danger: #b1483a;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    box-sizing: border-box;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    background-image:
+      radial-gradient(ellipse at top, rgba(201,154,61,0.06), transparent 60%);
+    color: var(--text);
+    font-family: 'Source Sans 3', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, .label-font { font-family: 'Oswald', sans-serif; }
+
+  .wrap { max-width: 760px; margin: 0 auto; padding: 28px 20px 60px; }
+
+  header.top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 16px;
+    margin-bottom: 28px;
+  }
+  header.top .unit { font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 20px; letter-spacing: 0.5px; color: var(--accent); }
+  header.top .sub { font-size: 13px; color: var(--muted); }
+  header.top .who { font-size: 13px; color: var(--muted); text-align: right; }
+  header.top .who button {
+    background: none; border: none; color: var(--accent); cursor: pointer;
+    font-size: 12px; text-decoration: underline; padding: 0; margin-top: 4px;
+  }
+
+  /* Login screen */
+  .login-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 36px 30px;
+    margin-top: 40px;
+  }
+  .login-card h1 { font-size: 24px; margin: 0 0 6px; color: var(--text); font-weight: 600; }
+  .login-card p { color: var(--muted); font-size: 14px; margin: 0 0 24px; line-height: 1.5; }
+  .field { margin-bottom: 16px; }
+  .grid-login { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+  @media (max-width: 560px) { .grid-login { grid-template-columns: 1fr; } }
+  .field label {
+    display: block; font-size: 12px; text-transform: uppercase; letter-spacing: 0.6px;
+    color: var(--muted); margin-bottom: 6px; font-family: 'Oswald', sans-serif; font-weight: 500;
+  }
+  input[type=text], input[type=number], input[type=date], textarea {
+    width: 100%; background: var(--surface-2); border: 1px solid var(--border);
+    color: var(--text); border-radius: 3px; padding: 10px 12px; font-size: 15px;
+    font-family: 'Source Sans 3', sans-serif;
+  }
+  input:focus, textarea:focus { outline: 2px solid var(--accent-dim); outline-offset: 0; border-color: var(--accent-dim); }
+  textarea { resize: vertical; min-height: 60px; }
+
+  button.primary {
+    background: var(--accent); color: #16190f; border: none; border-radius: 3px;
+    padding: 11px 22px; font-size: 14px; font-weight: 600; cursor: pointer;
+    font-family: 'Oswald', sans-serif; letter-spacing: 0.3px;
+  }
+  button.primary:hover { background: #d9ab4c; }
+  button.primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* Dashboard */
+  .panel {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 4px;
+    padding: 22px 24px; margin-bottom: 22px;
+  }
+  .panel h2 { font-size: 16px; color: var(--accent); margin: 0 0 4px; font-weight: 600; letter-spacing: 0.3px; }
+  .panel .hint { font-size: 13px; color: var(--muted); margin: 0 0 18px; }
+
+  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-bottom: 16px; }
+  @media (max-width: 560px) { .grid3 { grid-template-columns: 1fr; } }
+
+  .stat-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 22px; }
+  @media (max-width: 560px) { .stat-row { grid-template-columns: 1fr 1fr; } }
+  .stat {
+    background: var(--surface-2); border: 1px solid var(--border); border-radius: 4px;
+    padding: 14px 16px;
+  }
+  .stat .num { font-family: 'Oswald', sans-serif; font-size: 28px; color: var(--accent); font-weight: 600; line-height: 1; }
+  .stat .lbl { font-size: 12.5px; color: var(--muted); margin-top: 6px; line-height: 1.35; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  thead th {
+    text-align: left; font-family: 'Oswald', sans-serif; font-weight: 500; font-size: 11.5px;
+    text-transform: uppercase; letter-spacing: 0.4px; color: var(--muted);
+    border-bottom: 1px solid var(--border); padding: 8px 10px;
+  }
+  tbody td { padding: 9px 10px; border-bottom: 1px solid var(--border); color: var(--text); }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody td.nick { color: var(--accent); font-weight: 600; }
+  .num-cell { text-align: center; }
+  .empty-log { color: var(--muted); font-size: 13.5px; padding: 10px 0; }
+
+  .table-scroll { overflow-x: auto; }
+
+  .msg { font-size: 13px; margin-top: 10px; min-height: 18px; }
+  .msg.ok { color: #9db97a; }
+  .msg.err { color: var(--danger); }
+
+  @media (prefers-color-scheme: light) {
+    /* Deliberately kept dark regardless of system theme — this is a themed ops dossier, not a UI that adapts */
+  }
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+
+<script>
+const STORAGE_KEY = 'ub_instructor_identity';
+let db = null;
+let currentUser = loadIdentity();
+let unsubscribe = null;
+let latestDocs = [];
+
+function loadIdentity() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return null;
+    const obj = JSON.parse(raw);
+    if (obj && obj.discord && obj.nick && obj.static) return obj;
+    return null;
+  } catch (e) { return null; }
+}
+
+function identityLine(u) {
+  return `${u.nick} · ${u.discord} · статик ${u.static}`;
+}
+
+const app = document.getElementById('app');
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function renderHeader(loggedIn) {
+  return `
+    <header class="top">
+      <div>
+        <div class="unit">УПРАВЛЕНИЕ Б</div>
+        <div class="sub">Отчётность инструкторов</div>
+      </div>
+      ${loggedIn ? `
+      <div class="who">
+        <strong style="color:var(--text)">${escapeHtml(identityLine(currentUser))}</strong>
+        <br><button id="logoutBtn">сменить данные</button>
+      </div>` : ''}
+    </header>`;
+}
+
+function renderLogin() {
+  app.innerHTML = `
+    ${renderHeader(false)}
+    <div class="login-card">
+      <h1>Регистрация инструктора</h1>
+      <p>Укажите Discord, игровой ник и статик, чтобы открыть форму отчёта и журнал сдачи.</p>
+      <div class="grid-login">
+        <div class="field">
+          <label for="fDiscord">Discord</label>
+          <input type="text" id="fDiscord" placeholder="username или Ivanov#1234" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="fNickIn">Ник</label>
+          <input type="text" id="fNickIn" placeholder="игровое имя" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="fStaticIn">Статик</label>
+          <input type="text" id="fStaticIn" placeholder="481920" autocomplete="off">
+        </div>
+      </div>
+      <button class="primary" id="loginBtn">Войти</button>
+      <div class="msg err" id="loginMsg"></div>
+    </div>
+  `;
+  document.getElementById('loginBtn').addEventListener('click', doLogin);
+  ['fDiscord','fNickIn','fStaticIn'].forEach(id => {
+    document.getElementById(id).addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+  });
+  document.getElementById('fDiscord').focus();
+}
+
+function doLogin() {
+  const discord = document.getElementById('fDiscord').value.trim();
+  const nick = document.getElementById('fNickIn').value.trim();
+  const staticId = document.getElementById('fStaticIn').value.trim();
+  const msg = document.getElementById('loginMsg');
+  if (!discord || !nick || !staticId) {
+    msg.textContent = 'Заполните все три поля: Discord, ник и статик.';
+    return;
+  }
+  currentUser = { discord, nick, static: staticId };
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(currentUser));
+  renderDashboard();
+  initDb();
+}
+
+function todayISO() {
+  const d = new Date();
+  return d.toISOString().slice(0, 10);
+}
+
+function renderDashboard() {
+  app.innerHTML = `
+    ${renderHeader(true)}
+
+    <div class="panel">
+      <h2>Новый отчёт</h2>
+      <p class="hint">Заполните показатели за смену и отправьте — запись сразу попадёт в общий журнал.</p>
+      <div class="grid3">
+        <div class="field" style="margin-bottom:0">
+          <label for="fRaids">Состав на отбитие бизнеса тайников</label>
+          <input type="number" id="fRaids" min="0" step="1" value="0">
+        </div>
+        <div class="field" style="margin-bottom:0">
+          <label for="fPromo">Проверено отчётов на повышение</label>
+          <input type="number" id="fPromo" min="0" step="1" value="0">
+        </div>
+        <div class="field" style="margin-bottom:0">
+          <label for="fTrain">Тренировок стрельбы проведено</label>
+          <input type="number" id="fTrain" min="0" step="1" value="0">
+        </div>
+      </div>
+      <div class="field">
+        <label for="fDate">Дата</label>
+        <input type="date" id="fDate" value="${todayISO()}">
+      </div>
+      <div class="field">
+        <label for="fNote">Комментарий (необязательно)</label>
+        <textarea id="fNote" placeholder="детали, ссылки на скриншоты и т.п."></textarea>
+      </div>
+      <button class="primary" id="submitBtn">Отправить отчёт</button>
+      <div class="msg" id="submitMsg"></div>
+    </div>
+
+    <div class="panel">
+      <h2>Сводка</h2>
+      <p class="hint">Итоги по всем сданным отчётам управления.</p>
+      <div class="stat-row" id="statRow">
+        <div class="stat"><div class="num">—</div><div class="lbl">состава на отбитие тайников</div></div>
+        <div class="stat"><div class="num">—</div><div class="lbl">отчётов на повышение проверено</div></div>
+        <div class="stat"><div class="num">—</div><div class="lbl">тренировок стрельбы проведено</div></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Журнал отчётов</h2>
+      <p class="hint">Последние записи всех инструкторов.</p>
+      <div class="table-scroll" id="logHolder">
+        <div class="empty-log">Загрузка…</div>
+      </div>
+    </div>
+  `;
+  document.getElementById('submitBtn').addEventListener('click', submitReport);
+  document.getElementById('logoutBtn').addEventListener('click', () => {
+    localStorage.removeItem(STORAGE_KEY);
+    if (unsubscribe) unsubscribe();
+    currentUser = null;
+    renderLogin();
+  });
+}
+
+async function initDb() {
+  if (!window.claude || typeof window.claude.use !== 'function') {
+    setLogError('Хранилище недоступно в этом окне — откройте отчёт как опубликованную страницу Claude.');
+    return;
+  }
+  db = await window.claude.use('db');
+  if (!db) {
+    setLogError('Не удалось подключить общее хранилище отчётов для этого вида.');
+    return;
+  }
+  const q = db.collection('reports').orderBy('createdAt', 'desc').limit(200);
+  unsubscribe = q.onSnapshot(
+    snap => {
+      latestDocs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderStats(latestDocs);
+      renderLog(latestDocs);
+    },
+    err => setLogError('Ошибка загрузки журнала: ' + (err && err.message ? err.message : 'неизвестная'))
+  );
+}
+
+function setLogError(text) {
+  const holder = document.getElementById('logHolder');
+  if (holder) holder.innerHTML = `<div class="empty-log">${escapeHtml(text)}</div>`;
+}
+
+function renderStats(docs) {
+  const totals = docs.reduce((acc, r) => {
+    acc.raids += Number(r.raids) || 0;
+    acc.promo += Number(r.promoChecks) || 0;
+    acc.train += Number(r.trainings) || 0;
+    return acc;
+  }, { raids: 0, promo: 0, train: 0 });
+  const row = document.getElementById('statRow');
+  if (!row) return;
+  row.innerHTML = `
+    <div class="stat"><div class="num">${totals.raids}</div><div class="lbl">состава на отбитие тайников</div></div>
+    <div class="stat"><div class="num">${totals.promo}</div><div class="lbl">отчётов на повышение проверено</div></div>
+    <div class="stat"><div class="num">${totals.train}</div><div class="lbl">тренировок стрельбы проведено</div></div>
+  `;
+}
+
+function renderLog(docs) {
+  const holder = document.getElementById('logHolder');
+  if (!holder) return;
+  if (!docs.length) {
+    holder.innerHTML = `<div class="empty-log">Пока нет ни одного отчёта. Сдайте первый выше.</div>`;
+    return;
+  }
+  const rows = docs.map(r => `
+    <tr>
+      <td>${escapeHtml(r.date || '—')}</td>
+      <td class="nick">${escapeHtml(r.nick || '—')}</td>
+      <td>${escapeHtml(r.discord || '—')}</td>
+      <td>${escapeHtml(r.static || '—')}</td>
+      <td class="num-cell">${Number(r.raids) || 0}</td>
+      <td class="num-cell">${Number(r.promoChecks) || 0}</td>
+      <td class="num-cell">${Number(r.trainings) || 0}</td>
+      <td>${escapeHtml(r.note || '')}</td>
+    </tr>
+  `).join('');
+  holder.innerHTML = `
+    <table>
+      <thead>
+        <tr>
+          <th>Дата</th><th>Ник</th><th>Discord</th><th>Статик</th><th>Тайники</th><th>Повышения</th><th>Тренировки</th><th>Комментарий</th>
+        </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>
+  `;
+}
+
+async function submitReport() {
+  const raids = parseInt(document.getElementById('fRaids').value, 10) || 0;
+  const promo = parseInt(document.getElementById('fPromo').value, 10) || 0;
+  const train = parseInt(document.getElementById('fTrain').value, 10) || 0;
+  const date = document.getElementById('fDate').value || todayISO();
+  const note = document.getElementById('fNote').value.trim();
+  const msg = document.getElementById('submitMsg');
+  const btn = document.getElementById('submitBtn');
+
+  if (!db) {
+    msg.className = 'msg err';
+    msg.textContent = 'Хранилище ещё не подключено, попробуйте через секунду.';
+    return;
+  }
+
+  btn.disabled = true;
+  msg.className = 'msg';
+  msg.textContent = 'Отправка…';
+  try {
+    await db.collection('reports').add({
+      discord: currentUser.discord,
+      nick: currentUser.nick,
+      static: currentUser.static,
+      raids, promoChecks: promo, trainings: train,
+      date, note,
+      createdAt: new Date().toISOString()
+    });
+    msg.className = 'msg ok';
+    msg.textContent = 'Отчёт сохранён и добавлен в общий журнал.';
+    document.getElementById('fRaids').value = 0;
+    document.getElementById('fPromo').value = 0;
+    document.getElementById('fTrain').value = 0;
+    document.getElementById('fNote').value = '';
+  } catch (e) {
+    msg.className = 'msg err';
+    msg.textContent = 'Не удалось сохранить отчёт: ' + (e && e.message ? e.message : 'ошибка записи');
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+// boot
+if (currentNick) {
+  renderDashboard();
+  initDb();
+} else {
+  renderLogin();
+}
+</script>
+</body>
+</html>
